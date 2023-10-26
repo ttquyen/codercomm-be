@@ -7,18 +7,18 @@ const userSchema = Schema(
         email: { type: String, required: true, unique: true },
         password: { type: String, required: true, select: false },
 
-        avatarUrl: { type: String, required: true, default: "" },
-        coverUrl: { type: String, required: true, default: "" },
+        avatarUrl: { type: String, required: false, default: "" },
+        coverUrl: { type: String, required: false, default: "" },
 
-        aboutMe: { type: String, required: true, default: "" },
-        city: { type: String, required: true, default: "" },
-        country: { type: String, required: true, default: "" },
-        company: { type: String, required: true, default: "" },
-        jobTitle: { type: String, required: true, default: "" },
-        facebookLink: { type: String, required: true, default: "" },
-        instagramLink: { type: String, required: true, default: "" },
-        linkedinLink: { type: String, required: true, default: "" },
-        twitterLink: { type: String, required: true, default: "" },
+        aboutMe: { type: String, required: false, default: "" },
+        city: { type: String, required: false, default: "" },
+        country: { type: String, required: false, default: "" },
+        company: { type: String, required: false, default: "" },
+        jobTitle: { type: String, required: false, default: "" },
+        facebookLink: { type: String, required: false, default: "" },
+        instagramLink: { type: String, required: false, default: "" },
+        linkedinLink: { type: String, required: false, default: "" },
+        twitterLink: { type: String, required: false, default: "" },
 
         isDeleted: { type: Boolean, default: false, select: false },
         friendCount: { type: Number, default: 0 },
@@ -26,6 +26,13 @@ const userSchema = Schema(
     },
     { timestamps: true }
 );
+
+userSchema.methods.toJSON = function () {
+    const user = this._doc;
+    delete user.password;
+    delete user.isDeleted;
+    return user;
+};
 
 const User = mongoose.model("User", userSchema);
 module.exports = User;
