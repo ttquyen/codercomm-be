@@ -34,4 +34,34 @@ userController.register = catchAsync(async (req, res, next) => {
     );
 });
 
+userController.getUsers = catchAsync(async (req, res, next) => {
+    //Get data from request
+    const { userId } = req;
+    // Business Logic Validation
+    // Process
+    //Response
+    sendResponse(res, 200, true, { userId }, null, "Get users successful");
+    //
+});
+userController.getCurrentUser = catchAsync(async (req, res, next) => {
+    //Get data from request
+    // Business Logic Validation
+    // Process
+    //Response
+    sendResponse(res, 200, true, {}, null, "Get current user successful");
+});
+userController.getSingleUser = catchAsync(async (req, res, next) => {
+    //Get data from request
+    // Business Logic Validation
+    // Process
+    //Response
+    sendResponse(res, 200, true, {}, null, "Get user successful");
+});
+userController.updateProfile = catchAsync(async (req, res, next) => {
+    //Get data from request
+    // Business Logic Validation
+    // Process
+    //Response
+});
+
 module.exports = userController;

@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { body } = require("express-validator");
+const { body, param } = require("express-validator");
 const validators = require("../middlewares/validators");
 const userController = require("../controllers/user.controller");
+const authentication = require("../middlewares/authentication");
 /**
  * @route POST /users
  * @description Register a new user
@@ -26,22 +27,43 @@ router.post(
  * @description Get users with pagination
  * @access Login required
  */
-
+router.get("/", authentication.loginRequired, userController.getUsers);
 /**
  * @route GET /users/me
  * @description Get current user info
  * @access Login required
  */
-
+router.get("/me", authentication.loginRequired, userController.getCurrentUser);
 /**
  * @route GET /users/:id
  * @description Get a user profile
  * @access Login required
  */
+router.get(
+    "/:id",
+    authentication.loginRequired,
+    //validator param in url
+    //use custom because of using self-defined function
+    validators.validate([
+        param("id").exists().isString().custom(validators.checkObjectId),
+    ]),
+    userController.getSingleUser
+);
 
 /**
  * @route PUT /users/:id
  * @description Update a user profile
  * @access Login required
  */
+router.put(
+    "/:id",
+    authentication.loginRequired,
+    //validator param in url
+    //use custom because of using self-defined function
+    validators.validate([
+        param("id").exists().isString().custom(validators.checkObjectId),
+    ]),
+    userController.updateProfile
+);
+
 module.exports = router;
