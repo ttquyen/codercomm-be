@@ -78,4 +78,20 @@ router.delete(
     ]),
     postController.deleteSinglePost
 );
+
+/**
+ * @route GET /posts/:id/comments
+ * @description Get comments of a post
+ * @access Login required
+ */
+router.get(
+    "/:id/comments",
+    authentication.loginRequired,
+    //validator param in url
+    //use custom because of using self-defined function
+    validators.validate([
+        param("id").exists().isString().custom(validators.checkObjectId),
+    ]),
+    postController.getCommentsOfPost
+);
 module.exports = router;

@@ -159,5 +159,36 @@ postController.deleteSinglePost = catchAsync(async (req, res, next) => {
     //Response
     return sendResponse(res, 200, true, post, null, "Delete Post Successful");
 });
+postController.getCommentsOfPost = catchAsync(async (req, res, next) => {
+    //Get data from request
+    const postId = req.params.id;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    // Validate post exist
+    let post = await Post.findOne({ _id: postId, isDeleted: false });
+    if (!post)
+        throw new AppError(401, "Post not found", "Get Comments of Post Error");
 
+    // Process
+    //get comments
+    const count = await Comment.countDocuments({ post: postId });
+    const totalPages = Math.ceil(count / limit);
+    const offset = limit * (page - 1);
+
+    const comments = await Comment.find({ post: postId })
+        .sort({ createdAt: -1 })
+        .skip(offset)
+        .limit(limit)
+        .populate("author");
+
+    //Response
+    return sendResponse(
+        res,
+        200,
+        true,
+        { comments, totalPages, count },
+        null,
+        "Get Comments of Post Successful"
+    );
+});
 module.exports = postController;
